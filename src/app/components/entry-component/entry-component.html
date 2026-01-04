@@ -1,0 +1,60 @@
+<div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+<h2 class="text-xl mb-4">Sisäänajoportti</h2>
+<form [formGroup]="parkingForm" (ngSubmit)="onSubmit()">
+  <div class="flex flex-col gap-4">
+    <label>Auton rekisterinumero</label>
+    <input
+      formControlName="licensePlate"
+      placeholder="ABC-123"
+      maxlength="8"
+      type="search"
+      class="uppercase bg-neutral-secondary-medium border border-default-medium border-b-gray-400 p-4 rounded h-10"
+    />
+  </div>
+
+  <div class="my-4 flex flex-col gap-4">
+    <label>Valitse vapaa paikka</label>
+    <div class="grid grid-cols-10 gap-2">
+      @for(spot of spots; track $index) {
+      <button
+        type="button"
+        class="w-8 h-8 text-sm rounded border border-transparent"
+        [disabled]="!spot.isAvailable"
+        (click)="selectSpot(spot)"
+        [class.bg-green-100]="spot.isAvailable"
+        [class.bg-red-200]="!spot.isAvailable"
+        [class.!border-blue-500]="spot.spot === selectedSpot"
+      >{{ spot.spot }}</button>
+      }
+    </div>
+  </div>
+  <p class="py-4 text-gray-500 text-sm mb-4 ">
+    Vapaita paikkoja: {{ (garage.capacity || 0) - (garage.cars.length || 0) }} /
+    {{ garage.capacity }}
+  </p>
+  <div class="py-4 flex flex-col gap-4">
+    <button
+      type="submit"
+      [disabled]="!parkingForm.valid"
+      class="rounded-md bg-blue-600 hover:bg-blue-700 text-white font-semibold p-2 w-48 shadow-md transition-colors"
+    >
+      Pysäköi auto
+    </button>
+  </div>
+</form>
+
+@if (message) {
+<div
+  class="rounded-md w-full p-4 my-4"
+  role="alert"
+  [class.bg-green-100]="message.success"
+  [class.border-green-500]="message.success"
+  [class.text-green-700]="message.success"
+  [class.bg-red-100]="!message.success"
+  [class.border-red-500]="!message.success"
+  [class.text-red-700]="!message.success"
+>
+  <p class="w-full">{{ message.message }}</p>
+</div>
+}
+</div>

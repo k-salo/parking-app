@@ -1,0 +1,73 @@
+<div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+<h2 class="text-xl text-left">Pysäköidyt autot</h2>
+<p class="py-4 text-gray-500 text-sm mb-4 ">
+  Vapaita paikkoja: {{ (parkingGarage.capacity || 0) - (parkingGarage.cars.length || 0) }} /
+  {{ parkingGarage.capacity }}
+</p>
+@if (parkingGarage.cars.length > 0) {
+  @for (car of parkingGarage.cars || []; track car.licensePlate) {
+  <div class="max-w-md rounded-xl border border-slate-200 bg-white p-4 shadow-sm mb-4">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-lg font-semibold text-slate-900">{{ car.licensePlate }}</span>
+      </div>
+      <span class="text-lg font-semibold text-slate-900">{{ car.cost }}</span>
+    </div>
+
+    <div class="mt-3 space-y-1 text-sm text-slate-700">
+      <div>Paikka {{ car.spot }}</div>
+      <div>Kesto {{ car.timeParked }}</div>
+    </div>
+
+    <div class="mt-3 text-sm text-slate-500">
+      <div>Aloitus: {{ car.entry | date : 'd.M.yyyy H:m:ss' }}</div>
+      @if (car.exit) {
+      <div>Poistuminen: {{ car.exit | date : 'd.M.yyyy H:m:ss' }}</div>
+      }
+    </div>
+  </div>
+  }
+} @else {
+<p class="py-4">Ei pysäköityä autoja</p>
+}
+
+<div class="py-8 flex flex-col gap-4">
+  <label class="inline-flex items-center cursor-pointer">
+    <input type="checkbox" value="" class="sr-only peer" (change)="toggleExited()" />
+    <div
+      class="relative w-9 h-5 rounded-full bg-slate-500 peer-checked:bg-slate-300
+      after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:h-4 after:w-4
+      after:rounded-full after:bg-slate-100 after:transition-transform peer-checked:after:translate-x-4"
+    ></div>
+    <span class="select-none ms-3 text-sm font-medium text-heading text-gray-500"> Näytä poistuneet autot </span>
+  </label>
+</div>
+
+@if (showExitedCars) {
+  <h2 class="text-xl py-4">Poistuneet autot</h2>
+  @if (exitedCars.length > 0) {
+    @for (car of exitedCars || []; track $index) {
+    <div class="max-w-md rounded-xl border border-slate-200 bg-white p-4 shadow-sm mb-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="text-lg font-semibold text-slate-900">{{ car.licensePlate }}</span>
+        </div>
+        <span class="text-lg font-semibold text-slate-900">{{ car.cost }}</span>
+      </div>
+      <div class="mt-3 space-y-1 text-sm text-slate-700">
+        <div>Paikka {{ car.spot }}</div>
+        <div>Kesto {{ car.timeParked }}</div>
+      </div>
+      <div class="mt-3 text-sm text-slate-500">
+        <div>Aloitus: {{ car.entry | date : 'd.M.yyyy H:m:ss' }}</div>
+        @if (car.exit) {
+        <div>Poistuminen: {{ car.exit | date : 'd.M.yyyy H:m:ss' }}</div>
+        }
+      </div>
+    </div>
+    }
+  } @else {
+  <p class="py-4">Ei poistuneita autoja</p>
+  }
+}
+</div>
